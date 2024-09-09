@@ -2,6 +2,11 @@ import sys
 import cv2
 import os
 from openpose import pyopenpose as op
+# Include the OpenPose library path (adjust the path to your specific setup)
+import sys
+sys.path.append('C:/openpose/build/python/openpose/Release')  # Update this if needed
+
+
 
 # Step 1: Configure OpenPose parameters
 params = dict()
