@@ -3,7 +3,7 @@ import os
 import cv2
 
 # Add OpenPose library to the Python path
-sys.path.append('C:/openpose/openpose/bin/python/openpose/Release')
+sys.path.append(r'C:\openpose\openpose\bin\python\openpose\Release')
 os.environ['PATH'] += ';C:/openpose/openpose/bin/x64/Release;C:/openpose/openpose/bin;'
 
 try:
