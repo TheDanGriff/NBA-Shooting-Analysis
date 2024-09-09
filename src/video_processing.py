@@ -6,6 +6,7 @@ import os
 from openpose import pyopenpose as op
 import matplotlib.pyplot as plt  # Import matplotlib for plotting frames
 
+
 # Step 3: Define the video path (already downloaded to /content)
 video_path = "/content/first_video.mp4"
 
@@ -56,6 +57,8 @@ while cap.isOpened() and frame_count < max_frames:
     plt.imshow(frame_rgb)
     plt.title(f"Frame {frame_count + 1}")
     plt.axis('off')
+    
+    # Show the plot to display it inline
     plt.show()
 
     frame_count += 1
@@ -64,6 +67,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Processed first 20 seconds of the video and saved in {output_dir}")
+
 
 
 
