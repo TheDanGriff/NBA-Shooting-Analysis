@@ -4,10 +4,8 @@ import cv2
 import sys
 import os
 from openpose import pyopenpose as op
+import matplotlib.pyplot as plt  # Import matplotlib for plotting frames
 
-import cv2
-import os
-from openpose import pyopenpose as op
 
 # Step 3: Define the video path (already downloaded to /content)
 video_path = "/content/first_video.mp4"
@@ -53,13 +51,12 @@ while cap.isOpened() and frame_count < max_frames:
     output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
     cv2.imwrite(output_path, datum.cvOutputData)
     
-    # Display the frame with keypoints for debugging
-    frame_rgb = cv2.cvtColor(datum.cvOutputData, cv2.COLOR_BGR2RGB)
-    plt.figure(figsize=(10,10))
-    plt.imshow(frame_rgb)
-    plt.title(f"Frame {frame_count + 1}")
-    plt.axis('off')
-    plt.show()
+    # Display the frame with keypoints using OpenCV
+    cv2.imshow("Pose Estimation", datum.cvOutputData)
+    
+    # Allow exit by pressing the 'q' key
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
     
     frame_count += 1
 
@@ -67,5 +64,6 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Processed first 20 seconds of the video and saved in {output_dir}")
+
 
 
