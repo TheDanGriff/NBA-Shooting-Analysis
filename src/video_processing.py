@@ -1,7 +1,9 @@
+import sys
+sys.path.append('/content/openpose/build/python')
+from openpose import pyopenpose as op
 import cv2
 import sys
 import os
-from openpose import pyopenpose as op
 
 # Output directory for the processed frames
 output_dir = "/content/openpose_output/"
