@@ -56,8 +56,3 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Processed video saved in {output_dir}")
-
-
-    print(f"Processed video saved in {output_dir}")
-else:
-    print("No video files found in the folder.")
