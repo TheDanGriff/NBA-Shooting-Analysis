@@ -4,6 +4,14 @@ import os
 import matplotlib.pyplot as plt
 import gdown
 
+# Define the folder and video path
+video_folder = 'C:/openpose/videos'
+video_path = os.path.join(video_folder, 'nba_shooting_video.mp4')
+
+# Ensure the directory exists
+if not os.path.exists(video_folder):
+    os.makedirs(video_folder)
+
 # Step 1: Add OpenPose path to Python path (Adjust as per your OpenPose installation)
 sys.path.append(r'C:\openpose\bin\python\openpose\Release')  # Adjust the path if necessary
 
