@@ -3,6 +3,7 @@ sys.path.append('/content/openpose/build/python')
 import cv2
 import os
 import matplotlib.pyplot as plt
+import requests
 from openpose import pyopenpose as op
 
 # Step 1: Verify Model Path and Configuration
@@ -75,11 +76,14 @@ print(f"Processed first 20 seconds of the video and saved in {output_dir}")
 # Step 6: Test with a sample image to verify OpenPose is working
 print("\nTesting with a sample image to verify OpenPose is working correctly...")
 
-# Download a test image
-!wget -O test_image.jpg https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/examples/media/COCO_val2014_000000000192.jpg
+# Download a test image using requests library
+image_url = "https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/examples/media/COCO_val2014_000000000192.jpg"
+image_path = "/content/test_image.jpg"
+response = requests.get(image_url)
+with open(image_path, 'wb') as f:
+    f.write(response.content)
 
 # Process the image with OpenPose
-image_path = "/content/test_image.jpg"
 datum = op.Datum()
 image_to_process = cv2.imread(image_path)
 datum.cvInputData = image_to_process
@@ -96,5 +100,6 @@ else:
 plt.imshow(cv2.cvtColor(datum.cvOutputData, cv2.COLOR_BGR2RGB))
 plt.axis('off')
 plt.show()
+
 
 
