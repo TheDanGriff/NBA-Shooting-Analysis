@@ -3,7 +3,6 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 import gdown
-from openpose import pyopenpose as op  # Ensure the correct import path
 
 # Step 1: Add OpenPose path to Python path (Adjust as per your OpenPose installation)
 sys.path.append(r'C:\openpose\bin\python\openpose\Release')  # Adjust the path if necessary
