@@ -20,7 +20,7 @@ params = dict()
 params["model_folder"] = "/content/openpose/models/"
 params["face"] = False
 params["hand"] = False
-params["net_resolution"] = "320x176"
+params["net_resolution"] = "656x368"
 
 opWrapper = op.WrapperPython()
 opWrapper.configure(params)
@@ -46,6 +46,8 @@ while cap.isOpened() and frame_count < max_frames:
 
     # Now emplace and pop the properly formatted list
     opWrapper.emplaceAndPop(datums_pointer)
+    print(datum.poseKeypoints)
+
     
     # Save the processed frame
     output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
