@@ -1,32 +1,36 @@
 import sys
-sys.path.append('/content/openpose/build/python')
 import cv2
 import os
 import matplotlib.pyplot as plt
-import requests
-from openpose import pyopenpose as op
+import gdown
+from openpose import pyopenpose as op  # Ensure the correct import path
 
-# Step 1: Verify Model Path and Configuration
+# Step 1: Add OpenPose path to Python path (Adjust as per your OpenPose installation)
+sys.path.append('C:/openpose/build/python')  # Adjust the path if necessary
+
+# Step 2: Download video from Google Drive using gdown
+drive_url = "https://drive.google.com/uc?id=1u58LaWMfTpVjOVUSlCxJ1Ukw9eopCkMY"
+video_path = "C:/openpose/videos/first_video.mp4"
+gdown.download(drive_url, video_path, quiet=False)
+
+# Step 3: Set up OpenPose parameters and initialize OpenPose
 params = dict()
-params["model_folder"] = "/content/openpose/models/"  # Ensure the correct path
+params["model_folder"] = "C:/openpose/models/"  # Ensure the correct model path
 params["face"] = False
 params["hand"] = False
-params["net_resolution"] = "656x368"  # Increase resolution for better accuracy
+params["net_resolution"] = "656x368"
 
 # Initialize OpenPose
 opWrapper = op.WrapperPython()
 opWrapper.configure(params)
 opWrapper.start()
 
-# Step 2: Define the video path (already downloaded to /content)
-video_path = "/content/first_video.mp4"  # Adjust to your video path
-
-# Step 3: Create the output directory for processed frames
-output_dir = "/content/openpose_output/"
+# Step 4: Create the output directory for processed frames
+output_dir = "C:/openpose/output_frames/"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Step 4: Process the first 20 seconds of the video (assuming 30 fps, that's 600 frames)
+# Step 5: Process the first 20 seconds of the video (assuming 30 fps, that's 600 frames)
 cap = cv2.VideoCapture(video_path)
 frame_rate = 30  # Adjust this according to your video's actual frame rate if necessary
 max_frames = 20 * frame_rate  # Number of frames for the first 20 seconds
@@ -40,17 +44,12 @@ while cap.isOpened() and frame_count < max_frames:
     datum = op.Datum()
     datum.cvInputData = frame
     
-    # Wrap datum in a list of shared pointers
-    datums_pointer = op.VectorDatum()
-    datums_pointer.append(datum)
-
-    # Now emplace and pop the properly formatted list
-    opWrapper.emplaceAndPop(datums_pointer)
+    # Process frame with OpenPose
+    opWrapper.emplaceAndPop([datum])
     
-    # Step 5: Debugging - Check if keypoints are detected
+    # Step 6: Check if keypoints are detected and save the frame
     if datum.poseKeypoints is not None:
         print(f"Keypoints detected for frame {frame_count + 1}")
-        print(datum.poseKeypoints)
     else:
         print(f"No keypoints detected for frame {frame_count + 1}")
     
@@ -71,17 +70,15 @@ while cap.isOpened() and frame_count < max_frames:
 cap.release()
 cv2.destroyAllWindows()
 
-print(f"Processed first 20 seconds of the video and saved in {output_dir}")
+print(f"Processed first 20 seconds of the video and saved frames in {output_dir}")
 
-# Step 6: Test with a sample image to verify OpenPose is working
+# Step 7: Test with a sample image to verify OpenPose is working
 print("\nTesting with a sample image to verify OpenPose is working correctly...")
 
 # Download a test image using requests library
 image_url = "https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/examples/media/COCO_val2014_000000000192.jpg"
-image_path = "/content/test_image.jpg"
-response = requests.get(image_url)
-with open(image_path, 'wb') as f:
-    f.write(response.content)
+image_path = "C:/openpose/test_image.jpg"
+gdown.download(image_url, image_path, quiet=False)
 
 # Process the image with OpenPose
 datum = op.Datum()
