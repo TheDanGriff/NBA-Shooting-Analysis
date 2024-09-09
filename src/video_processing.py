@@ -5,6 +5,10 @@ import sys
 import os
 from openpose import pyopenpose as op
 
+import cv2
+import os
+from openpose import pyopenpose as op
+
 # Step 3: Define the video path (already downloaded to /content)
 video_path = "/content/first_video.mp4"
 
@@ -24,11 +28,13 @@ opWrapper = op.WrapperPython()
 opWrapper.configure(params)
 opWrapper.start()
 
-# Step 6: Process the downloaded video
+# Step 6: Process the first 20 seconds of the video (assuming 30 fps, that's 600 frames)
 cap = cv2.VideoCapture(video_path)
+frame_rate = 30  # Adjust this according to your video's actual frame rate if necessary
+max_frames = 20 * frame_rate  # Number of frames for the first 20 seconds
 
 frame_count = 0
-while cap.isOpened():
+while cap.isOpened() and frame_count < max_frames:
     ret, frame = cap.read()
     if not ret:
         break
@@ -46,10 +52,20 @@ while cap.isOpened():
     # Save the processed frame
     output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
     cv2.imwrite(output_path, datum.cvOutputData)
+    
+    # Display the frame with keypoints for debugging
+    frame_rgb = cv2.cvtColor(datum.cvOutputData, cv2.COLOR_BGR2RGB)
+    plt.figure(figsize=(10,10))
+    plt.imshow(frame_rgb)
+    plt.title(f"Frame {frame_count + 1}")
+    plt.axis('off')
+    plt.show()
+    
     frame_count += 1
 
 cap.release()
 cv2.destroyAllWindows()
 
-print(f"Processed video saved in {output_dir}")
+print(f"Processed first 20 seconds of the video and saved in {output_dir}")
+
 
