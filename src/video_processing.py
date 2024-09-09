@@ -1,18 +1,29 @@
 import sys
 sys.path.append('/content/openpose/build/python')
-from openpose import pyopenpose as op
 import cv2
 import sys
 import os
+from openpose import pyopenpose as op
+from google.colab import drive
+import gdown
 
-# Output directory for the processed frames
+# Step 1: Mount Google Drive
+drive.mount('/content/drive')
+
+# Step 2: Download the video from the shared link using gdown
+file_id = "1u58LaWMfTpVjOVUSlCxJ1Ukw9eopCkMY"  # Replace with your actual file ID
+output = "/content/first_video.mp4"  # Download location
+gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
+
+# Step 3: Define the video path (already downloaded to /content)
+video_path = "/content/first_video.mp4"
+
+# Step 4: Create the output directory for processed frames
 output_dir = "/content/openpose_output/"
-
-# Create the output directory if it doesn't exist
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Configure OpenPose
+# Step 5: Configure OpenPose
 params = dict()
 params["model_folder"] = "/content/openpose/models/"
 params["face"] = False
@@ -23,7 +34,7 @@ opWrapper = op.WrapperPython()
 opWrapper.configure(params)
 opWrapper.start()
 
-# Read the video from Google Drive
+# Step 6: Process the downloaded video
 cap = cv2.VideoCapture(video_path)
 
 frame_count = 0
@@ -36,7 +47,7 @@ while cap.isOpened():
     datum.cvInputData = frame
     opWrapper.emplaceAndPop([datum])
     
-    # Save the processed frame for debugging purposes
+    # Save the processed frame
     output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
     cv2.imwrite(output_path, datum.cvOutputData)
     frame_count += 1
@@ -45,3 +56,8 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Processed video saved in {output_dir}")
+
+
+    print(f"Processed video saved in {output_dir}")
+else:
+    print("No video files found in the folder.")
