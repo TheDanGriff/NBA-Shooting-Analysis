@@ -6,7 +6,7 @@ import gdown
 from openpose import pyopenpose as op  # Ensure the correct import path
 
 # Step 1: Add OpenPose path to Python path (Adjust as per your OpenPose installation)
-sys.path.append('C:/openpose/build/python')  # Adjust the path if necessary
+sys.path.append('C:\openpose\bin\python\openpose\Release')  # Adjust the path if necessary
 
 # Step 2: Download video from Google Drive using gdown
 drive_url = "https://drive.google.com/uc?id=1u58LaWMfTpVjOVUSlCxJ1Ukw9eopCkMY"
