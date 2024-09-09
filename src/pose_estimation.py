@@ -1,10 +1,10 @@
 import sys
-import cv2
 import os
+import cv2
 
-# Include the OpenPose library path
-sys.path.append('C:/openpose/openpose/bin/python/openpose/Release')  # Adjusted to your pyopenpose path
-os.environ['PATH'] += ';C:/openpose/openpose/x64/Release;'  # Add OpenPose binaries to the system PATH
+# Add OpenPose library to the Python path
+sys.path.append('C:/openpose/openpose/bin/python/openpose/Release')
+os.environ['PATH'] += ';C:/openpose/openpose/bin/x64/Release;C:/openpose/openpose/bin;'
 
 try:
     from openpose import pyopenpose as op
@@ -14,24 +14,22 @@ except ImportError as e:
 
 # Step 1: Configure OpenPose parameters
 params = dict()
-params["model_folder"] = "C:/openpose/openpose/models/"  # Path to your models folder
+params["model_folder"] = "C:/openpose/openpose/models/"
 params["face"] = False
 params["hand"] = False
-params["net_resolution"] = "656x368"  # Set net resolution to enhance detection accuracy
 
 # Step 2: Initialize OpenPose
 opWrapper = op.WrapperPython()
 opWrapper.configure(params)
 opWrapper.start()
 
-# Step 3: Process the video (Ensure your video is correctly placed in the path specified)
-video_path = "C:/openpose/openpose/videos/first_video.mp4"  # Path to the video
-output_dir = "C:/openpose/openpose/openpose_output/"  # Output directory for processed frames
+# Step 3: Process the video
+video_path = "C:/openpose/openpose/videos/first_video.mp4"
+output_dir = "C:/openpose/openpose/openpose_output/"
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Step 4: Capture the video and run OpenPose
 cap = cv2.VideoCapture(video_path)
 frame_count = 0
 
