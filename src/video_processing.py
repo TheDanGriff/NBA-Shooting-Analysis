@@ -4,8 +4,6 @@ import cv2
 import sys
 import os
 from openpose import pyopenpose as op
-from google.colab import drive
-import gdown
 
 # Step 3: Define the video path (already downloaded to /content)
 video_path = "/content/first_video.mp4"
@@ -37,7 +35,13 @@ while cap.isOpened():
     
     datum = op.Datum()
     datum.cvInputData = frame
-    opWrapper.emplaceAndPop([datum])
+    
+    # Wrap datum in a list of shared pointers
+    datums_pointer = op.VectorDatum()
+    datums_pointer.append(datum)
+
+    # Now emplace and pop the properly formatted list
+    opWrapper.emplaceAndPop(datums_pointer)
     
     # Save the processed frame
     output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
@@ -48,3 +52,4 @@ cap.release()
 cv2.destroyAllWindows()
 
 print(f"Processed video saved in {output_dir}")
+
