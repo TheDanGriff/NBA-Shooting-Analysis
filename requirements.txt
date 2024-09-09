@@ -1,0 +1,8 @@
+opencv-python
+pandas
+scikit-learn
+yolov5
+deep_sort_realtime
+openpose
+gdown
+PyDrive
