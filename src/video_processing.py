@@ -1,39 +1,45 @@
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+import cv2
+import sys
 import os
+from openpose import pyopenpose as op
 
-def authenticate_gdrive():
-    # Authenticate Google Drive API
-    gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()  # This creates a local server to authenticate
-    drive = GoogleDrive(gauth)
-    return drive
+# Output directory for the processed frames
+output_dir = "/content/openpose_output/"
 
-def list_and_download_latest_video(drive, output_path):
-    # List all video files in your Google Drive
-    file_list = drive.ListFile({'q': "mimeType contains 'video/'"}).GetList()
-    
-    if not file_list:
-        print("No video files found in Google Drive.")
-        return None
-    
-    # Select the most recent video
-    video_file = file_list[0]  # Change this logic if needed to get a specific file
-    for file in file_list:
-        print(f"Title: {file['title']}, ID: {file['id']}")
-    
-    # Download the video
-    print(f"Downloading: {video_file['title']}")
-    video_file.GetContentFile(os.path.join(output_path, video_file['title']))
-    return video_file['title']
+# Create the output directory if it doesn't exist
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
-if __name__ == "__main__":
-    output_path = "./"  # Directory where you want to save the video
-    drive = authenticate_gdrive()
-    video_file_name = list_and_download_latest_video(drive, output_path)
-    
-    if video_file_name:
-        print(f"Video downloaded and saved as: {video_file_name}")
-    else:
-        print("Failed to download video.")
+# Configure OpenPose
+params = dict()
+params["model_folder"] = "/content/openpose/models/"
+params["face"] = False
+params["hand"] = False
+params["net_resolution"] = "320x176"
 
+opWrapper = op.WrapperPython()
+opWrapper.configure(params)
+opWrapper.start()
+
+# Read the video from Google Drive
+cap = cv2.VideoCapture(video_path)
+
+frame_count = 0
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+    
+    datum = op.Datum()
+    datum.cvInputData = frame
+    opWrapper.emplaceAndPop([datum])
+    
+    # Save the processed frame for debugging purposes
+    output_path = os.path.join(output_dir, f"frame_{frame_count:04d}.jpg")
+    cv2.imwrite(output_path, datum.cvOutputData)
+    frame_count += 1
+
+cap.release()
+cv2.destroyAllWindows()
+
+print(f"Processed video saved in {output_dir}")
