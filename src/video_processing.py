@@ -7,14 +7,6 @@ from openpose import pyopenpose as op
 from google.colab import drive
 import gdown
 
-# Step 1: Mount Google Drive
-drive.mount('/content/drive')
-
-# Step 2: Download the video from the shared link using gdown
-file_id = "1u58LaWMfTpVjOVUSlCxJ1Ukw9eopCkMY"  # Replace with your actual file ID
-output = "/content/first_video.mp4"  # Download location
-gdown.download(f"https://drive.google.com/uc?id={file_id}", output, quiet=False)
-
 # Step 3: Define the video path (already downloaded to /content)
 video_path = "/content/first_video.mp4"
 
